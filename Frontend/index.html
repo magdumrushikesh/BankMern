@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create New Account</title>
+</head>
+<body>
+    <h1>Create New Account</h1>
+
+    <form id="createAccountForm">
+        <label for="id">Account ID:</label><br>
+        <input type="text" id="id" name="id" required><br><br>
+    
+        <label for="pass">Password:</label><br>
+        <input type="password" id="pass" name="pass" required><br><br>
+    
+        <label for="name">Name:</label><br>
+        <input type="text" id="name" name="name" required><br><br>
+    
+        <label for="balance">Balance:</label><br>
+        <input type="number" id="balance" name="balance" required><br><br>
+    
+        <button type="button" onclick="submitForm()">Create Account</button>
+    </form>
+    
+    <script>
+        function submitForm() {
+            const id = document.getElementById('id').value;
+            const pass = document.getElementById('pass').value;
+            const name = document.getElementById('name').value;
+            const balance = document.getElementById('balance').value;
+    
+            fetch("http://localhost:3000/", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ id, pass, name, balance })
+            })
+                .then(response => response.text())
+                .then(data => {
+                    alert(data);
+                })
+                .catch(error => {
+                    console.error("Error:", error);
+                });
+        }
+    </script>
+    
+    <a href="/Frontend/login.html">Already Account Login!</a>
+
+    
+</body>
+</html>

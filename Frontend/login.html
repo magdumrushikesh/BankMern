@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Login To Account</h1>
+
+    
+        <label for="loginId">Account ID:</label><br>
+        <input type="number" id="loginId" name="id" required><br><br>
+
+        <label for="loginPass">Password:</label><br>
+        <input type="password" id="loginPass" name="pass" required><br><br>
+
+        <button onclick="submitForm()">Login</button>
+   
+
+        <script>
+            function submitForm() {
+                const id = document.getElementById('loginId').value;
+                const pass = document.getElementById('loginPass').value;
+        
+                fetch("http://localhost:3000/verify", {
+                    method: "POST", // Change to POST
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ id, pass }) // Send JSON body
+                })
+                    .then(response => response.text())
+                    .then(data => {
+                        alert(data);
+                    })
+                    .catch(error => {
+                        console.error("Error:", error);
+                    });
+            }
+        </script>
+        
+    
+</body>
+</html>

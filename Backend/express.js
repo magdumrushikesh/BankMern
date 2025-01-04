@@ -53,6 +53,28 @@ app.post("/verify",(req, res) => {
     
 })
 
+// Endpoint to fetch account details
+app.get("/account/:id", (req, res) => {
+    const { id } = req.params;
+    query = "SELECT * FROM account WHERE id = ?";
+    con.query(query, [id], (err, rows) => {
+        if (err) {
+            console.log(err);
+            res.status(500).send("Server error");
+            return;
+        }
+        if (rows.length > 0) {
+            res.json(rows[0]); // Send account details
+        } else {
+            res.status(404).send("Account not found");
+        }
+    });
+});
+
+
+// Your existing endpoints (post, put, etc.) remain the same
+
+
 app.put("/deposit/:id/:balance",(req,res)=>{
     var id= req.params.id;
     var balance = parseInt(req.params.balance);

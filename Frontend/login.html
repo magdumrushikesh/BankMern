@@ -32,8 +32,17 @@
                 })
                     .then(response => response.text())
                     .then(data => {
+                    if (data.includes("Login Successfully")) {
                         alert(data);
-                    })
+                       
+                    
+                        
+                       
+                        
+                    } else {
+                        alert(data);
+                    }
+                })
                     .catch(error => {
                         console.error("Error:", error);
                     });

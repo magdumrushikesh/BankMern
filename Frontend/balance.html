@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account Management</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        div {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <h2>Enter User ID</h2>
+        <label for="userIdInput">User ID:</label>
+        <input type="number" id="userIdInput" placeholder="Enter User ID">
+        <button onclick="getUserDetails()">Submit</button>
+    </div>
+
+    <div id="accountDetails" style="display: none;">
+        <h2>Account Details</h2>
+        <p id="accountName">Name:</p>
+        <p id="accountBalance">Balance:</p>
+        
+        <h3>Deposit Balance</h3>
+        <label for="depositAmount">Enter amount to deposit:</label>
+        <input type="number" id="depositAmount" placeholder="Enter amount">
+        <button onclick="depositBalance()">Deposit</button>
+        
+        <h3>Withdraw Balance</h3>
+        <label for="withdrawAmount">Enter amount to withdraw:</label>
+        <input type="number" id="withdrawAmount" placeholder="Enter amount">
+        <button onclick="withdrawBalance()">Withdraw</button>
+    </div>
+
+    <script>
+        let userId;
+
+        function getUserDetails() {
+            userId = document.getElementById('userIdInput').value.trim();
+            
+            if (!userId) {
+                alert('Please enter a valid User ID.');
+                return;
+            }
+
+            fetchAccountDetails();
+        }
+
+        function fetchAccountDetails() {
+            fetch(`http://localhost:3000/account/${userId}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Account not found');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    document.getElementById('accountName').textContent = `Name: ${data.name}`;
+                    document.getElementById('accountBalance').textContent = `Balance: ₹${data.balance}`;
+                    document.getElementById('accountDetails').style.display = 'block';
+                })
+                .catch(error => {
+                    console.error(error);
+                    alert('Error fetching account details.');
+                });
+        }
+
+        function depositBalance() {
+            const amount = parseInt(document.getElementById('depositAmount').value.trim());
+            
+            if (isNaN(amount) || amount <= 0) {
+                alert('Please enter a valid deposit amount.');
+                return;
+            }
+
+            fetch(`http://localhost:3000/deposit/${userId}/${amount}`, { method: 'PUT' })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Failed to deposit balance');
+                    }
+                    alert('Deposit successful!');
+                    fetchAccountDetails();
+                })
+                .catch(error => {
+                    console.error(error);
+                    alert('Error depositing balance.');
+                });
+        }
+
+        function withdrawBalance() {
+            const amount = parseInt(document.getElementById('withdrawAmount').value.trim());
+            
+            if (isNaN(amount) || amount <= 0) {
+                alert('Please enter a valid withdrawal amount.');
+                return;
+            }
+
+            fetch(`http://localhost:3000/withdraw/${userId}/${amount}`,
+                 { method: 'PUT' })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Failed to withdraw balance');
+                    }
+                    alert('Withdrawal successful!');
+                    fetchAccountDetails();
+                })
+                .catch(error => {
+                    console.error(error);
+                    alert('Error withdrawing balance.');
+                });
+        }
+    </script>
+</body>
+</html>
